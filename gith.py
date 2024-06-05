@@ -13,7 +13,7 @@ start_time = time.time()
 
 def random_string(length):
     letters = string.ascii_lowercase
-    return ''.join(random.choice(letters) for i in range(length))
+    return ''.join(random.choice(letters) for _ in range(length))
 
 def download_file(url):
     response = requests.get(url)
@@ -37,7 +37,7 @@ def get_repo_content(repo_url):
 
 @bot.message_handler(commands=['start'])
 def send_start(message):
-    bot.reply_to(message, "```\n My Bot GitHub Downloader By @sedihbetgw \n```", parse_mode='Markdown')
+    bot.reply_to(message, "```\n My Bot GitHub Downloader By @sedihbetgw\n ```", parse_mode='Markdown')
 
 @bot.message_handler(commands=['git'])
 def send_repo_files(message):
@@ -68,16 +68,19 @@ def wget_file(message):
         return
     url = message.text.split()[1]
 
-    r = requests.get(url)
-    if r.status_code == 200:
-        file_name = url.split("/")[-1]
-        with open(file_name, "wb") as file:
-            file.write(r.content)
-        with open(file_name, "rb") as file:
-            bot.send_document(message.chat.id, file)
-        os.remove(file_name)
-    else:
-        bot.reply_to(message, "Failed to download the file from the provided URL.")
+    try:
+        r = requests.get(url)
+        if r.status_code == 200:
+            file_name = url.split("/")[-1]
+            with open(file_name, "wb") as file:
+                file.write(r.content)
+            with open(file_name, "rb") as file:
+                bot.send_document(message.chat.id, file)
+            os.remove(file_name)
+        else:
+            bot.reply_to(message, f"Error: Status Code - {r.status_code}")
+    except Exception as e:
+        bot.reply_to(message, "An error occurred while processing the request.")
 
 @bot.message_handler(commands=['uptime'])
 def uptime(message):
@@ -87,3 +90,4 @@ def uptime(message):
     bot.reply_to(message, f"Bot has been running for {uptime_str}")
 
 bot.polling()
+            
