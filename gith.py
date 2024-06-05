@@ -5,7 +5,7 @@ import string
 import zipfile
 import os
 
-TOKEN = "YOUR_BOT_TOKEN"
+TOKEN = "7492001137:AAGfDGg8YoFWkFps8SqcOkjht2B1D4g6vU4"
 bot = telebot.TeleBot(TOKEN)
 
 def random_string(length):
