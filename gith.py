@@ -4,9 +4,12 @@ import random
 import string
 import zipfile
 import os
+import time
 
 TOKEN = "7492001137:AAGfDGg8YoFWkFps8SqcOkjht2B1D4g6vU4"
 bot = telebot.TeleBot(TOKEN)
+
+start_time = time.time()
 
 def random_string(length):
     letters = string.ascii_lowercase
@@ -34,7 +37,7 @@ def get_repo_content(repo_url):
 
 @bot.message_handler(commands=['start'])
 def send_start(message):
-    bot.reply_to(message, "```\nMy Bot GitHub Downloader By @sedihbetgw\n```", parse_mode='Markdown')
+    bot.reply_to(message, "```\n My Bot GitHub Downloader By @sedihbetgw \n```", parse_mode='Markdown')
 
 @bot.message_handler(commands=['git'])
 def send_repo_files(message):
@@ -67,7 +70,6 @@ def wget_file(message):
 
     r = requests.get(url)
     if r.status_code == 200:
-        # Mengambil nama file dari URL
         file_name = url.split("/")[-1]
         with open(file_name, "wb") as file:
             file.write(r.content)
@@ -75,6 +77,13 @@ def wget_file(message):
             bot.send_document(message.chat.id, file)
         os.remove(file_name)
     else:
-        bot.reply_to(message, "Failed to download")
-  
+        bot.reply_to(message, "Failed to download the file from the provided URL.")
+
+@bot.message_handler(commands=['uptime'])
+def uptime(message):
+    current_time = time.time()
+    uptime_seconds = current_time - start_time
+    uptime_str = time.strftime("%H:%M:%S", time.gmtime(uptime_seconds))
+    bot.reply_to(message, f"Bot has been running for {uptime_str}")
+
 bot.polling()
