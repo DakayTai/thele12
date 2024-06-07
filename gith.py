@@ -61,27 +61,6 @@ def send_repo_files(message):
 
     os.remove(zip_name)
 
-@bot.message_handler(commands=['get'])
-def wget_file(message):
-    if len(message.text.split()) < 2:
-        bot.reply_to(message, "Format Salah /get [url file]")
-        return
-    url = message.text.split()[1]
-
-    try:
-        r = requests.get(url)
-        if r.status_code == 200:
-            file_name = url.split("/")[-1]
-            with open(file_name, "wb") as file:
-                file.write(r.content)
-            with open(file_name, "rb") as file:
-                bot.send_document(message.chat.id, file)
-            os.remove(file_name)
-        else:
-            bot.reply_to(message, f"Error: Status Code - {r.status_code}")
-    except Exception as e:
-        bot.reply_to(message, "An error occurred while processing the request.")
-
 @bot.message_handler(commands=['uptime'])
 def uptime(message):
     current_time = time.time()
